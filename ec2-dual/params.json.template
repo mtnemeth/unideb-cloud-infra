@@ -1,0 +1,18 @@
+[
+  {   
+      "ParameterKey": "PrivSubnetIdParameter",
+      "ParameterValue": ""
+  },
+  {   
+      "ParameterKey": "PubSubnetIdParameter",
+      "ParameterValue": ""
+  },
+  {   
+      "ParameterKey": "SgIdParameter",
+      "ParameterValue": ""
+  },
+  {   
+      "ParameterKey": "KeyPairNameParameter",
+      "ParameterValue": "uni-keypair"
+  }
+]

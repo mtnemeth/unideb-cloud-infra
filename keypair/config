@@ -1,0 +1,4 @@
+cf_template_file="keypair.yml"
+cf_template_body=$(cat ${cf_template_file})
+cf_stack_name="uni-keypair-stack"
+parameter_file=params.json

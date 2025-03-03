@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  PrivSubnetIdParameter:
+    Type: String
+    Description: Private Subnet in which one of the EC2 instances is created.
+  PubSubnetIdParameter:
+    Type: String
+    Description: Public Subnet in which the other EC2 instance is created.
+  SgIdParameter:
+    Type: String
+    Description: Security Group for the EC2 instance.
+  KeyPairNameParameter:
+    Type: String
+    Description: Key Pair for the EC2 instance.
+  LatestAmiIdParameter:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
+
+Resources:
+
+  Ec2PrivInstance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId:
+        Ref: LatestAmiIdParameter
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t3.micro
+      SecurityGroupIds:
+        - Ref: SgIdParameter
+      KeyName:
+        Ref: KeyPairNameParameter
+      SubnetId:
+        Ref: PrivSubnetIdParameter
+      Tags:
+        - Key: Name
+          Value: uni-test-priv
+
+  Ec2PubInstance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId:
+        Ref: LatestAmiIdParameter
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t3.micro
+      SecurityGroupIds:
+        - Ref: SgIdParameter
+      KeyName:
+        Ref: KeyPairNameParameter
+      SubnetId:
+        Ref: PubSubnetIdParameter
+      Tags:
+        - Key: Name
+          Value: uni-test-pub
+
+Outputs:
+  PrivEc2PrivIp:
+    Value: !GetAtt Ec2PrivInstance.PrivateIp
+  PubEC2PubIp:
+    Value: !GetAtt Ec2PubInstance.PublicIp
+  PrivEc2InstanceId:
+    Value:
+      Ref: Ec2PrivInstance
+  PubEc2InstanceId:
+    Value:
+      Ref: Ec2PubInstance

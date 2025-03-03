@@ -1,0 +1,18 @@
+Description: Creates a keypair for SSH connections
+
+Parameters:
+
+  KeyPairName:
+    Description: Name of the key pair to be created for SSH
+    Type: String
+
+Resources:
+  KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Ref KeyPairName
+      # Let AWS create a new keypair. Private key is stored in param store as /ec2/keypair/{key_pair_id}
+Outputs:
+  KeyPairId:
+    Description: Key pair ID for SSH
+    Value: !GetAtt KeyPair.KeyPairId

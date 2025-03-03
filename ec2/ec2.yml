@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  SubnetIdParameter:
+    Type: String
+    Description: Subnet in which the EC2 instance is created.
+  SgIdParameter:
+    Type: String
+    Description: Security Group for the EC2 instance.
+  KeyPairNameParameter:
+    Type: String
+    Description: Key Pair for the EC2 instance.
+  LatestAmiIdParameter:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
+
+Resources:
+
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId:
+        Ref: LatestAmiIdParameter
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t3.micro
+      SecurityGroupIds:
+        - Ref: SgIdParameter
+      KeyName:
+        Ref: KeyPairNameParameter
+      SubnetId:
+        Ref: SubnetIdParameter
+      Tags:
+        - Key: Name
+          Value: uni-test
+
+Outputs:
+  EC2PrivIp:
+    Value: !GetAtt Ec2Instance.PrivateIp
+  EC2PubIp:
+    Value: !GetAtt Ec2Instance.PublicIp
+  InstanceId:
+    Value:
+      Ref: Ec2Instance
