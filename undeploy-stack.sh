@@ -31,8 +31,9 @@ echo "Stack name   : ${cf_stack_name}"
 
 # Delete the CloudFormation stack
 aws cloudformation delete-stack \
-  --stack-name "${cf_stack_name}" \
-&& aws cloudformation wait stack-delete-complete \
+  --stack-name "${cf_stack_name}"
+
+aws cloudformation wait stack-delete-complete \
   --stack-name "${cf_stack_name}"
 
 echo "Stack ${cf_stack_name} deleted."
