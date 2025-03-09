@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Test RDS template for Aurora-MySQL'
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+
+  RDSVPCParameter:
+    Description: 'VPC in which the RDS gets created in'
+    Type: AWS::EC2::VPC::Id
+
+  DBInstanceIdParameter:
+    Description: 'DB instance ID'
+    Type: String
+
+  DBInstanceClassParameter:
+    Description: 'DB instance class'
+    Type: String
+    AllowedValues:
+      - 'db.t3.medium'
+      - 'db.r5.large'
+    Default: 'db.t3.medium'
+
+  DBNameParameter:
+    Description: 'Initial database to create'
+    Type: String
+    Default: airflow
+
+  BackupWindowParameter:
+    Description: 'Preferred Backup Window in UTC - format: hh:mm-hh:mm; Has to be at least 30 minutes (not validated)'
+    Type: String
+    MinLength: 11
+    MaxLength: 11
+    Default: '03:30-04:00'
+    AllowedPattern: '^[0-9]{2}\:[0-9]{2}-[0-9]{2}\:[0-9]{2}$'
+
+  MaintWindowParameter:
+    Description: 'Preferred Maintenance Window in UTC - format: dow:hh:mm-dow:hh:mm; Has to be at least 30 minutes (not validated)'
+    Type: String
+    MinLength: 19
+    MaxLength: 19
+    Default: 'sat:18:00-sat:18:30'
+    AllowedPattern: '^(mon|tue|wed|thu|fri|sat|sun):[0-9]{2}\:[0-9]{2}-(mon|tue|wed|thu|fri|sat|sun):[0-9]{2}\:[0-9]{2}$'
+
+  DBSubnetIdsParameter:
+    Description: 'Subnet IDs to belong under the subnet group'
+    Type: List<AWS::EC2::Subnet::Id>
+
+  DBSubnetGroupNameParameter:
+    Type: String
+    Description: 'Name of the DB subnet group'
+
+Resources:
+
+  rdsSubnetGrp:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: String
+      DBSubnetGroupName:
+        Ref: DBSubnetGroupNameParameter
+      SubnetIds: 
+        Ref: DBSubnetIdsParameter
+
+  rdsCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      EngineVersion: 8.0.mysql_aurora.3.05.2
+      DBClusterIdentifier: !Join ['', [!Ref DBInstanceIdParameter, '-cluster']]
+      MasterUsername: admin
+      MasterUserPassword: '{{resolve:ssm-secure:/rds/uni-rds/masterpass}}'
+      PreferredBackupWindow:
+        Ref: BackupWindowParameter
+      PreferredMaintenanceWindow:
+        Ref: MaintWindowParameter
+      BackupRetentionPeriod: 2
+      VpcSecurityGroupIds:
+      - Ref: MySQLSg
+      DatabaseName:
+        Ref: DBNameParameter
+      DBSubnetGroupName:
+        Ref: rdsSubnetGrp
+      StorageEncrypted: 'true'
+      Port: '3306'
+      DeletionPolicy: Delete
+      
+  rdsInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora-mysql
+      DBClusterIdentifier: !Ref rdsCluster
+      AllowMajorVersionUpgrade: 'false'
+      AutoMinorVersionUpgrade: 'false'
+      DBInstanceClass: 
+        Ref: DBInstanceClassParameter
+      DBInstanceIdentifier:
+        Ref: DBInstanceIdParameter
+      StorageType: aurora
+      MultiAZ: 'false'
+      PubliclyAccessible: false
+      DeletionPolicy: Delete
+
+
+  MySQLSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allows SSH connections
+      GroupName: !Sub ${EnvironmentName}-MySQL-sg
+      SecurityGroupEgress:
+        -  CidrIp: '0.0.0.0/0'
+           Description: All outbound
+           IpProtocol: '-1'
+      VpcId: !Ref RDSVPCParameter
+  
+  MySQLSgSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref MySQLSg
+      SourceSecurityGroupId: !Ref MySQLSg
+      Description: Incoming MySQL
+      FromPort: 3306
+      IpProtocol: TCP
+      ToPort: 3306

@@ -2,14 +2,14 @@
 
 ## Recap on VPC
 
-VPC stands for virtual private cloud, and it is essentially your virtual network in the cloud where you can place your
-cloud infrastructure. See the [AWS Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+VPC stands for virtual private cloud. It is your virtual network in the cloud where you can place your cloud
+infrastructure. See the [AWS Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
 for more details.
 
 ## About this stack
 
 This stack deploys a "full" VPC with multiple private and public subnets, NAT gateway and internet gateway. Note, that
-the NAT GW has extra cost, so remove this VPC by deleting the stack if no longer needed.
+the NAT GW has extra cost, so remove this VPC by deleting the stack when no longer needed.
 
 
 ## Overview of VPC configuration

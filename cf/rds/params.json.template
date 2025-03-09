@@ -1,0 +1,37 @@
+[
+  {   
+      "ParameterKey": "EnvironmentName",
+      "ParameterValue": "uni-vpc"
+  },
+  {
+    "ParameterKey": "RDSVPCParameter",
+    "ParameterValue": "ADD-YOUR-VPC-ID-HERE"
+  },
+  {
+    "ParameterKey": "DBSubnetIdsParameter",
+    "ParameterValue": "ADD-YOUR-PRIVATE-SUBNET-IDS-HERE-AS-COMMA-SEPARATED-LIST"
+  },
+  { "ParameterKey": "DBSubnetGroupNameParameter",
+    "ParameterValue": "uni-rds-subnet-group"
+  },
+  {
+    "ParameterKey": "DBInstanceClassParameter",
+    "ParameterValue": "db.t3.medium"
+  },
+  {
+    "ParameterKey": "DBInstanceIdParameter",
+    "ParameterValue": "uni-rds-00"
+  },
+  {
+    "ParameterKey": "DBNameParameter",
+    "ParameterValue": "uni"
+  },
+  {
+    "ParameterKey": "BackupWindowParameter",
+    "ParameterValue": "03:30-04:00"
+  },
+  {
+    "ParameterKey": "MaintWindowParameter",
+    "ParameterValue": "sat:18:00-sat:18:30"
+  }
+]

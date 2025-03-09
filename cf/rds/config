@@ -1,0 +1,4 @@
+cf_template_file="aurora-mysql.yml"
+cf_template_body=$(cat ${cf_template_file})
+cf_stack_name="test-aurora-mysql-rds-stack"
+parameter_file=params.json

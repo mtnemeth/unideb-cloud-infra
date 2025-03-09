@@ -2,7 +2,7 @@
 
 ## Deploy steps
 
-Review the `keypair/params.json` file. Change the `KeyPairName` parameter to your liking.
+Review the `keypair/params.json` file. Optionally, change the `KeyPairName` parameter to your liking.
 
 Run the the following command:
 
@@ -12,9 +12,8 @@ Run the the following command:
 
 ## Retrieve and store the private key
 
-The CF stack created a keypair. Run the following commands to retrieve and store it locally
-to be used for SSH connections later. Alternatively you can also get the private key from the AWS console,
-in the "Parameter Store" service.
+The CF stack created a keypair. Run the following commands to retrieve and store the private key locally,
+to be used for SSH connections later. Alternatively you can use the AWS console ("Parameter Store" service).
 
 ```Bash
 # make sure there is a .ssh folder in the user's home and has the right permissions
