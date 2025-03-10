@@ -9,7 +9,10 @@ The `vpc-full` and `keypair` CF stacks are pre-requisite for this stack.
 ## Deploy steps
 
 Create a parameter file named `params.json`:
-- Copy the template file: `cp ec2/params.json.template ec2/params.json`.
+- Copy the template file:
+  ```Bash
+  cp ec2/params.json.template ec2/params.json
+  ```
 - Update the following parameters in the params.json file:
   - `SubnetIdParameter` - specify the subnetId of a **public** subnet
   - `SgIdParameter` - specify a security group ID that provied SSH access
