@@ -75,7 +75,7 @@ HOST private-ec2
 Run the following command:
 
 ```Bash
-ssh public-ec2
+ssh private-ec2
 ```
 
 
