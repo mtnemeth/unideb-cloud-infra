@@ -18,31 +18,43 @@ to be used for SSH connections later. Alternatively you can use the AWS console 
 ```Bash
 # make sure there is a .ssh folder in the user's home and has the right permissions
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
+```
 
+```Bash
 # get the keypair name from the CF stack parameters
 keypair_name=$(aws cloudformation describe-stacks \
 --stack-name uni-keypair-stack \
 --query 'Stacks[*].Parameters[?ParameterKey==`KeyPairName`].ParameterValue' \
 --output text)
+```
 
+```Bash
 # get the keypair id from the CF stack outout
 keypair_id=$(aws cloudformation describe-stacks \
 --stack-name uni-keypair-stack \
 --query 'Stacks[*].Outputs[?OutputKey==`KeyPairId`].OutputValue' \
 --output text)
+```
 
+```Bash
 # print key name and value to verify
 echo "${keypair_name} - ${keypair_id}"
+```
 
+```Bash
 # retrieve the private key from parameter store
 aws ssm get-parameter \
 --name "/ec2/keypair/${keypair_id}" \
 --query 'Parameter.Value' \
 --output text \
 --with-decryption > ~/.ssh/"${keypair_name}.pem"
+```
 
+```Bash
 chmod 600 ~/.ssh/${keypair_name}.pem
+```
 
+```Bash
 ls -la ~/.ssh
 ```
 
