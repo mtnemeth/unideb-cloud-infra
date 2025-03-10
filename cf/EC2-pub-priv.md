@@ -8,12 +8,23 @@ The `vpc-full` and `keypair` CF stacks are pre-requisite for this stack.
 
 ## Deploy steps
 
-Create a parameter file named `param.json`:
-- Copy the template file: `cp ec2-pub-priv/params.json.template ec2-pub-priv/params.json`.
+Create a parameter file named `params.json`:
+- Copy the template file:
+   ```Bash
+   cp ec2-pub-priv/params.json.template ec2-pub-priv/params.json
+   ```
 - Update the following parameters in the `params.json` file:
   - `PubSubnetIdParameter` - specify the subnetId of a **public** subnet
   - `PrivSubnetIdParameter` - specify the subnetId of a **private** subnet
   - `SgIdParameter` - specify a security group ID that allows SSH access
+
+You can use the `nano` text editor for the task. Execute:
+
+```Bash
+nano ec2-pub-priv/params.json
+```
+
+To exit, use `CTRL-X`, press `Y` or `N` to save or not save, hit Enter to leave filename unchanged when prompted.
 
 Run
 
@@ -23,7 +34,7 @@ Run
 
 ## Connect to the EC2 instance via SSH
 
-> Note: there is a better and safer way to connect to EC2 instances by using AWS session manager, but that's
+> Note: there is a better / more secure way to connect to EC2 instances by using AWS session manager, but that's
 a topic for a later session.
 
 ### Option 1 - agent forwarding
@@ -33,10 +44,14 @@ Run the following
 ```Bash
 # start SSH agent so we don't need to copy the private key over
 eval $(ssh-agent)
+```
 
+```Bash
 # add private key
 ssh-add ~/.ssh/YOUR-PRIV-KEY.pem
+```
 
+```Bash
 # connect to the 1st instance in the public subnet
 ssh -i ~/.ssh/YOUR-PRIV-KEY.pem -A ec2-user@PUBLIC-INSTANCE-IP-ADDRESS-HERE
 ```
@@ -84,5 +99,5 @@ ssh private-ec2
 Run
 
 ```Bash
-undeploy-stack.sh ec2-pub-priv
+./undeploy-stack.sh ec2-pub-priv
 ```

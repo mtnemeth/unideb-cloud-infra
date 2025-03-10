@@ -1,6 +1,6 @@
 # Cloudformation stack for an EC2 instance
 
-This stack will deploy an EC2 instance.
+This stack will deploy an EC2 instance into a public subnet.
 
 ## Prerequisites
 
@@ -16,6 +16,14 @@ Create a parameter file named `params.json`:
 - Update the following parameters in the params.json file:
   - `SubnetIdParameter` - specify the subnetId of a **public** subnet
   - `SgIdParameter` - specify a security group ID that provied SSH access
+
+You can use the `nano` text editor for the task. Execute:
+
+```Bash
+nano ec2/params.json
+```
+
+To exit, use `CTRL-X`, press `Y` or `N` to save or not save, hit Enter to leave filename unchanged when prompted.
 
 Run
 
@@ -38,5 +46,5 @@ ssh -i ~/.ssh/uni-keypair.pem ec2-user@IP-ADDRESS-HERE
 Run
 
 ```Bash
-undeploy-stack.sh ec2
+./undeploy-stack.sh ec2
 ```
