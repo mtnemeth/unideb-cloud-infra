@@ -14,8 +14,8 @@ The recommended order to deploy/undeploy the CF stacks:
 1. Deploy `vpc-full`
 1. Deploy `ec2`
 1. Undeploy `ec2`
-1. Deploy `ec2-dual`
-1. Undeploy `ec2-dual`
+1. Deploy `ec2-pub-priv`
+1. Undeploy `ec2-pub-priv`
 1. Undeploy `vpc-full`
 
 ### RDS

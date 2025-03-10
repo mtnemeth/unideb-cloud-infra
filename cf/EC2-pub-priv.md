@@ -9,7 +9,7 @@ The `vpc-full` and `keypair` CF stacks are pre-requisite for this stack.
 ## Deploy steps
 
 Create a parameter file named `param.json`:
-- Copy the template file: `cp ec2-dual/params.json.template ec2-dual/params.json`.
+- Copy the template file: `cp ec2-pub-priv/params.json.template ec2-pub-priv/params.json`.
 - Update the following parameters in the `params.json` file:
   - `PubSubnetIdParameter` - specify the subnetId of a **public** subnet
   - `PrivSubnetIdParameter` - specify the subnetId of a **private** subnet
@@ -18,7 +18,7 @@ Create a parameter file named `param.json`:
 Run
 
 ```Bash
-./deploy-stack.sh ec2-dual
+./deploy-stack.sh ec2-pub-priv
 ```
 
 ## Connect to the EC2 instance via SSH
@@ -84,5 +84,5 @@ ssh private-ec2
 Run
 
 ```Bash
-undeploy-stack.sh ec2
+undeploy-stack.sh ec2-pub-priv
 ```

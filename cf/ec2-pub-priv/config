@@ -1,4 +1,4 @@
 cf_template_file="ec2.yml"
 cf_template_body=$(cat ${cf_template_file})
-cf_stack_name="uni-ec2-dual-stack"
+cf_stack_name="uni-ec2-pub-priv-stack"
 parameter_file=params.json
