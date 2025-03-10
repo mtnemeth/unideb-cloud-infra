@@ -62,6 +62,8 @@ aws ec2 run-instances \
 --associate-public-ip-address
 ```
 
+You can use the up and down arrow keys to scroll through the output and hit `q` to exit.
+
 ## Describe the instances
 
 Run the following command to get the instance ID and public IP address of running instances:
