@@ -18,13 +18,13 @@ Create a parameter file named `params.json`:
   - `PrivSubnetIdParameter` - specify the subnetId of a **private** subnet
   - `SgIdParameter` - specify a security group ID that allows SSH access
 
-You can use the `nano` text editor for the task. Execute:
+   You can use the `nano` text editor for the task. Execute:
 
-```Bash
-nano ec2-pub-priv/params.json
-```
+   ```Bash
+   nano ec2-pub-priv/params.json
+   ```
 
-To exit, use `CTRL-X`, press `Y` or `N` to save or not save, hit Enter to leave filename unchanged when prompted.
+   To exit, use `CTRL-X`, press `Y` or `N` to save or not save, hit Enter to leave filename unchanged when prompted.
 
 Run
 
