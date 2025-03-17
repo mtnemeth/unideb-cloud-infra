@@ -21,7 +21,7 @@ aws dynamodb create-table \
 aws dynamodb list-tables
 ```
 
-## Insert data into the table
+## Insert data into the table - `put-item`
 
 Primary key must be unique. The `put-item` operation either creates a new item or replaces an existing item.
 
@@ -37,7 +37,7 @@ aws dynamodb put-item \
 --item '{"id": {"S": "2"}, "Attr2": {"S": "Z"}, "Attr3": {"S": "U"}}'
 ```
 
-## Scan the table and list primary keys
+## Scan the table and list primary keys - `scan`
 
 Scan operations access all itmes in the table.
 
