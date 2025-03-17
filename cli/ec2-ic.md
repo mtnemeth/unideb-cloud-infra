@@ -54,7 +54,7 @@ Run the following code:
 aws ec2 run-instances \
 --image-id ami-05b10e08d247fb927 \
 --count 1 \
---instance-type t3.micro \
+--instance-type t2.micro \
 --security-group-ids "${SG_ID}" \
 --subnet-id "${SUBNET_ID}" \
 --block-device-mappings "[{\"DeviceName\":\"/dev/sdf\",\"Ebs\":{\"VolumeSize\":20,\"DeleteOnTermination\":false}}]" \

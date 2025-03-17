@@ -22,7 +22,7 @@ Resources:
       ImageId:
         Ref: LatestAmiIdParameter
       InstanceInitiatedShutdownBehavior: stop
-      InstanceType: t3.micro
+      InstanceType: t2.micro
       SecurityGroupIds:
         - Ref: SgIdParameter
       KeyName:

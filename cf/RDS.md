@@ -12,9 +12,11 @@ We need a master (admin/root) password for the RDS. Create one and store it in A
 manage it in files or pass it in as parameter to the Cloudformation template. Run the following:
 
 ```Bash
+rds_master_pass='ENTER-PASSWORD-HERE'
+
 aws ssm put-parameter \
 --name "/rds/uni-rds/masterpass" \
---value "ENTER-PASSWORD-HERE" \
+--value "${rds_master_pass}" \
 --type SecureString
 ```
 
@@ -35,17 +37,15 @@ to get this info (VPC & subnet IDs of your private subnets) from the AWS console
 
 ```Bash
 aws cloudformation describe-stacks \
---stack-name uni-vpc-stack \
+--stack-name uni-vpc-full-stack \
 --query 'Stacks[*].Outputs[?OutputKey==`VPC`].OutputValue' --output text
 ```
 
 ```Bash
 aws cloudformation describe-stacks \
---stack-name uni-vpc-stack \
+--stack-name uni-vpc-full-stack \
 --query 'Stacks[*].Outputs[?OutputKey==`PrivateSubnets`].OutputValue' --output text
 ```
-
-
 
 ### Edit parameters file
 
@@ -62,6 +62,8 @@ Update the following parameters in `params.json`:
   Enter a comma separated list of private subnet IDs.
   - Save the file.
 
+> Note: You can use `nano` as a text editor. Run `nano rds/params.json`. Edit the parameters, hit `CTRL-X` to exit,
+`Y` to save, and `Enter` to keep the original file name when prompted.
 
 ### Deploy the CF stack
 
@@ -92,10 +94,16 @@ Once connected to the EC2 instance, install command line tools to connect to MyS
 sudo dnf install -y mariadb105
 ```
 
-Connect to the RDS
+Set an environment variable to the RDS endpoint.
 
 ```Bash
-mysql -h DB-CLUSTER-ENDPOINT-HERE.us-east-1.rds.amazonaws.com -u admin -p
+DB_CLUSTER_ENDPOINT=YOUR-DB-CLUSTER-ENDPOINT.us-east-1.rds.amazonaws.com
+```
+
+Connect to the RDS.
+
+```Bash
+mysql -h "${DB_CLUSTER_ENDPOINT}" -u admin -p
 ```
 
 You will need to specify the password you set in previous steps. If you need to, you can get it from the parameter
@@ -150,7 +158,8 @@ MySQL [uni]> select * from test;
 
 ## Undeploy steps
 
-Make sure you detached the security group from the EC2 instance before deleting the stack.
+Make sure you either detached the security group from the EC2 instance, or terminated the instance before deleting
+the stack.
 
 ```Bash
 ./undeploy-stack.sh rds

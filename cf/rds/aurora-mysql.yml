@@ -83,7 +83,7 @@ Resources:
         Ref: rdsSubnetGrp
       StorageEncrypted: 'true'
       Port: '3306'
-      DeletionPolicy: Delete
+    DeletionPolicy: Delete
       
   rdsInstance:
     Type: AWS::RDS::DBInstance
@@ -99,7 +99,7 @@ Resources:
       StorageType: aurora
       MultiAZ: 'false'
       PubliclyAccessible: false
-      DeletionPolicy: Delete
+    DeletionPolicy: Delete
 
 
   MySQLSg:
