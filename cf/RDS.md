@@ -9,11 +9,14 @@ best practice.
 ### Create a master password
 
 We need a master (admin/root) password for the RDS. Create one and store it in AWS parameter store, so we don't need to
-manage it in files or pass it in as parameter to the Cloudformation template. Run the following:
+manage it in files or pass it in as parameter to the Cloudformation template. Run the following code to set the
+password. Use a password that is at least 8 characters long.
 
 ```Bash
 rds_master_pass='ENTER-PASSWORD-HERE'
+```
 
+```Bash
 aws ssm put-parameter \
 --name "/rds/uni-rds/masterpass" \
 --value "${rds_master_pass}" \
