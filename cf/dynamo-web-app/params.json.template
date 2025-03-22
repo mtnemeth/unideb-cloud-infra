@@ -1,0 +1,11 @@
+[
+    {
+        "ParameterKey": "PVpcId",
+        "ParameterValue": ""
+    } ,
+    {
+      "ParameterKey": "PSubnetId",
+      "ParameterValue": ""
+    }
+]
+
