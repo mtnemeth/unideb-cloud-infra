@@ -7,7 +7,7 @@ Parameters:
     Type: String
   PLatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64' # Amazon Linux 2023 (new)
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
   PStackPrefix:
     Type: String
     Default: 'dynamo-project'
@@ -48,7 +48,6 @@ Resources:
           ToPort: 22
       VpcId:
         Ref: PVpcId
-
   HttpSg:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -98,30 +97,6 @@ Resources:
                   - dynamodb:*
                 Resource:
                   - !GetAtt DynamoTable.Arn
-        - PolicyName: S3Access
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Sid: bucket
-                Effect: Allow
-                Action:
-                  - s3:GetBucketAcl
-                  - s3:GetBucketLocation
-                  - s3:GetBucketPolicy
-                  - s3:ListBucketMultipartUploads
-                Resource:
-                  - arn:aws:s3:::m-temp
-              - Sid: prefix
-                Effect: Allow
-                Action:
-                  - s3:ListBucket
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:DeleteObject
-                  - s3:ListMultipartUploadParts
-                  - s3:AbortMultipartUpload
-                Resource:
-                  - arn:aws:s3:::m-temp/*
 
   WebServerInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -150,19 +125,10 @@ Resources:
       UserData:
         Fn::Base64: |
           #!/bin/bash -xe
-          yum install -y git
-          cd /tmp
-          git clone https://github.com/mtnemeth/unideb-cloud-infra.git
-          git cd unideb-cloud-infra
-          git checkout feature/dynamo-web-app
-          cd cf/dynamo-web-app
-          # ./ec2-first-boot.sh
+          curl -sSLo - https://raw.githubusercontent.com/mtnemeth/unideb-cloud-infra/refs/heads/feature/dynamo-web-app/cf/dynamo-web-app/ec2-firstboot.sh | bash
       Tags:
         - Key: Name
           Value: webserver
-
-          
-
 
 Outputs:
   EC2Ip:
