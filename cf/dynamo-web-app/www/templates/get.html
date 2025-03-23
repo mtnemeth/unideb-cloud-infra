@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  {% include('head.html') %}
+  <body>
+    {% with active="Get" %} {% include('navbar.html') %} {% endwith %}
+    <div class="container">
+      <form id="keyInputForm">
+        <div class="form-group">
+          <label for="inputKey">Key</label>
+          <input type="text" class="form-control" id="inputKey" name="key" placeholder="Enter key">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>

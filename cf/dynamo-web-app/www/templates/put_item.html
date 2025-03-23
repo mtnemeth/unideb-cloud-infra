@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  {% include('head.html') %}
+  <body>
+    {% with active="Put" %} {% include('navbar.html') %} {% endwith %}
+    <div class="container">
+        <form id="keyInputForm" method="POST">
+            <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="text" class="form-control" id="inputKey" name="key" placeholder="Enter key"></td>
+                <td><input type="text" class="form-control" id="inputValue" name="value" placeholder="Enter value"></td>
+            </tr>
+            </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+  </body>
+</html>

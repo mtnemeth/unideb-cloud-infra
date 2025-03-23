@@ -1,0 +1,4 @@
+cf_template_file="main.yml"
+cf_template_body=$(cat ${cf_template_file})
+cf_stack_name="dyn-demo"
+parameter_file=params.json

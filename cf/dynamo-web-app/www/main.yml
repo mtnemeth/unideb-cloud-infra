@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  PVpcId:
+    Type: String
+  PSubnetId:
+    Type: String
+  PLatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64' # Amazon Linux 2023 (new)
+  PStackPrefix:
+    Type: String
+    Default: 'dynamo-project'
+
+Resources:
+
+  DynamoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: '${PStackPrefix}-table'
+      AttributeDefinitions:
+        - AttributeName: Key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Key
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Name
+          Value: DynamoTable
+
+  SshSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allows SSH connections
+      GroupName:
+        Fn::Sub: '${PStackPrefix}-SSH-sg'
+      SecurityGroupEgress:
+        -  CidrIp: '0.0.0.0/0'
+           Description: All outbound
+           IpProtocol: '-1'
+      SecurityGroupIngress:
+        - CidrIp: '0.0.0.0/0'
+          Description: Incoming SSH
+          FromPort: 22
+          IpProtocol: TCP
+          ToPort: 22
+      VpcId:
+        Ref: PVpcId
+
+  HttpSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allows HTTP connections
+      GroupName:
+        Fn::Sub: '${PStackPrefix}-HTTP-sg'
+      SecurityGroupEgress:
+        -  CidrIp: '0.0.0.0/0'
+           Description: All outbound
+           IpProtocol: '-1'
+      SecurityGroupIngress:
+        - CidrIp: '0.0.0.0/0'
+          Description: Incoming HTTP
+          FromPort: 80
+          IpProtocol: TCP
+          ToPort: 80
+        - CidrIp: '0.0.0.0/0'
+          Description: Incoming HTTP
+          FromPort: 8080
+          IpProtocol: TCP
+          ToPort: 8080
+      VpcId:
+        Ref: PVpcId
+
+  WebserverIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: WebserverIAMRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: DynamoAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: DynamoTestAppAllowAll
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource:
+                  - !GetAtt DynamoTable.Arn
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: bucket
+                Effect: Allow
+                Action:
+                  - s3:GetBucketAcl
+                  - s3:GetBucketLocation
+                  - s3:GetBucketPolicy
+                  - s3:ListBucketMultipartUploads
+                Resource:
+                  - arn:aws:s3:::m-temp
+              - Sid: prefix
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:ListMultipartUploadParts
+                  - s3:AbortMultipartUpload
+                Resource:
+                  - arn:aws:s3:::m-temp/*
+
+  WebServerInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - Ref: WebserverIAMRole
+
+  WebserverEc2:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId:
+        Ref: PLatestAmiId
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t2.micro
+      SecurityGroupIds:
+        - Ref: HttpSg
+        - Ref: SshSg
+      ###
+      # KeyName:
+      #   Ref: KeyPair
+      IamInstanceProfile:
+        Ref: WebServerInstanceProfile
+      SubnetId:
+        Ref: PSubnetId
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -xe
+          aws s3 cp s3://m-temp/temp/ec2-firstboot.sh - | bash -s
+      Tags:
+        - Key: Name
+          Value: webserver
+
+          
+
+
+Outputs:
+  EC2Ip:
+    Value: !GetAtt WebserverEc2.PublicIp
+  EC2Id:
+    Value:
+      Ref: WebserverEc2
+  DynamoDBTableArn:
+    Description: ARN of the DynamoDB table
+    Value:
+      Fn::GetAtt: DynamoTable.Arn    
