@@ -5,6 +5,10 @@ reads and writes key-vales to a DynamoDB table via boto3.
 
 This app is for demo purposes only.
 
+## Pre-requisite
+
+You need to have a VPC with a public subnet.
+
 ## Deploy stack
 
 Make a copy of the parmater file template (`params.json.template`) and start adding your parameters.
