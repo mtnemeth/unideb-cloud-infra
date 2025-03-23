@@ -1,0 +1,13 @@
+{
+    "source": ["aws.s3"],
+    "detail": {
+      "bucket": {
+        "name": ["YOURBUCKET"]
+      },
+      "object": {
+        "key": [{
+          "wildcard": "in/*"
+        }]
+      }
+    }
+  }
