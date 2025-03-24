@@ -1,7 +1,6 @@
 # DyanmoDB
 
-In this exercise, we create a DynamoDB table, insert a few items and query the table. Alternatiely, you can
-use the AWS console (web UI) to do the same.
+In this exercise, we create a DynamoDB table, insert a few items and query the table with the CLI.
 
 When commands return scrollable output, use the arrow keys to scroll and `q` to exit.
 
@@ -65,6 +64,18 @@ Only the individual item is accessed in the table.
 aws dynamodb get-item \
 --table-name TestTable \
 --key '{"id": {"S": "1"}}' | jq
+```
+
+## PartiQL
+
+You can also query the table using the PartiQL query language. For example:
+
+```Bash
+aws dynamodb execute-statement --statement "SELECT id FROM TestTable"
+```
+
+```Bash
+aws dynamodb execute-statement --statement "SELECT id FROM TestTable" --query "Items[*].id.N" --output text
 ```
 
 ## Delete table
