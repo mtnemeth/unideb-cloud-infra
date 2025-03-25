@@ -33,11 +33,19 @@ of the file.
 - Enter a name for the function in the `Function name`, for example: `UniS3FileProcessLambda`.
 - For `Runtime`, select `Python 3.13`.
 - For `Architecture`, leave it on default `x86_64`.
-- Under `Change default execution role`, select `Create a new role with basic Lambda permissions`.
+- Lambda Execution role. Under `Change default execution role`:
+  - If you don't have IAM permissions on the account:
+    - select `Use an existing role`
+    - select `UniRoles/UniLambdaRole`
+  - If you have IAM permissions on the account:
+    - select `Create a new role with basic Lambda permissions`.
 - Leave `Additional Configurations` default.
 - Hit the `Create function` button.
 
-## Update Lambda permissions
+## Update Lambda execution role permissions
+
+This step is applicable only if you have IAM permissions on the account and created a new role in the previous step.
+(Selected `Create a new role with basic Lambda permissions`)
 
 The default Lambda permission created in the previous step allows the Lambda function to write to CloudWatch Logs.
 But we also want the function to read from and write to the bucket we just created. To achivee that,
@@ -51,20 +59,27 @@ we need to update the Lambda function execution role.
   Add the conent of the attached [policy file](./lambda-s3-file-processing/lambda-execution-role-s3-policy.json),
   but make sure to replace `YOURBUCKET` with your actual bucket name.
 - Click `Next`, then enter `S3Access` for the policy name, then click `Create poloicy`.
-- Go back to the `Lambda` service and open your function. Enter code from [app.py](./lambda-s3-file-processing/app.py)
+
+## Add code for the function
+
+- Go back to the `Lambda` service and open your function. Select `lambda_function.py`.
+Enter code from [lambda_function.py](./lambda-s3-file-processing/lambda_function.py)
 - Click `Deploy`
+
+## Configure Trigger for the lambda function
+
 - On the `Function overview` panel, click `Add trigger`
-- Select `EventBridge`
+- Select `EventBridge (CloudWatch Events)`
 - Select `Create new rule`, enter `S3UniRule` for `Rule name`.
 - Select `Event Pattern`
 - Select `Simple Storage Service (S3)`
 - Select `All Events`
 - Click add.
-- In the `Configuration` tab, select `Triggers` on the left, then click on the `S3UniRule` link.
+- On the Lambda page in the `Configuration` tab, select `Triggers` on the left, then click on the `S3UniRule` link.
 - On the `Event pattern` tab, click `Edit`, select `Edit pattern`, select `Custom pattern`.
 - Enter the event pattern from the [event_pattern.json](./lambda-s3-file-processing/event_pattern.json) file,
   but make sure to replace `YOURBUCKET` with your actual bucket name.
-- Click `next` a few times, then `update rule`.
+- Click `next` a few times, then `Update rule`.
 
 ## Upload a test file
 
@@ -83,13 +98,13 @@ bucket='YOURBUCKET'
 Then upload the file to your bucket, under the `/in` prefix:
 
 ```Bash
-aws s3 cp /tmp/test2.txt s3://${bucket}/in/
+aws s3 cp /tmp/test.txt s3://${bucket}/in/
 ```
 
 Let's see if the processed file got created:
 
 ```Bash
-aws s3 ls /tmp/test2.txt s3://${bucket}/processed/
+aws s3 ls s3://${bucket}/processed/
 ```
 
 If there is a processed file, check it out:
@@ -97,8 +112,6 @@ If there is a processed file, check it out:
 ```Bash
 aws s3 cp s3://${bucket}/processed/test.txt -
 ```
-
-## Delete the lambda function
 
 ## Delete the function
 

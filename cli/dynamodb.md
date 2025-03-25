@@ -75,7 +75,7 @@ aws dynamodb execute-statement --statement "SELECT id FROM TestTable"
 ```
 
 ```Bash
-aws dynamodb execute-statement --statement "SELECT id FROM TestTable" --query "Items[*].id.N" --output text
+aws dynamodb execute-statement --statement "SELECT id FROM TestTable" --query "Items[*].id.S" --output text
 ```
 
 ## Delete table
