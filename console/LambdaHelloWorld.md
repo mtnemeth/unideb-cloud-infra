@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     }
 ```
 
-Hit the `Deploy` button on the left of the code.
+Hit the `Deploy` button on the left-hand side of the code editor.
 
 ## Test the function with test events
 
@@ -83,7 +83,7 @@ You should see the following result:
 
 ## Update the function code and add a function URL
 
-Go back to the code tab and update the function code with the following:
+Go back to the code tab and replace the function code with the following:
 
 ```Python
 import json
@@ -96,12 +96,12 @@ Make sure to click on the `Deploy` button.
 
 Add a function URL:
 - Go to the `Configuration` tab.
-- Select `Function URL` on the left hand side.
+- Select `Function URL` on the left-hand side.
 - Click `Create function URL`.
 - For auth type, chose `NONE`.
 - Click `Save` at the bottom.
 
-In the Console, in the `Function overview` panel, copy the `Function URL` to clipboard and paste it into a browser.
+In the Console, in the `Function overview` panel, copy the `Function URL` to the clipboard and paste it into a browser.
 
 Append the following string to the end of the URL in order to specify the input parameters for the function:
 `?Name=YourName`.

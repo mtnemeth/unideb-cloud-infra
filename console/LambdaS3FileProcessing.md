@@ -6,14 +6,15 @@ details about the file, such as bucket name and key. The lambda function reads t
 file and creates a processed version of it. In this example, adds a line at the beginning
 of the file.
 
-- Files are uplodaded to `s3://YOURBUCKET/in`
+- Original files are uplodaded to `s3://YOURBUCKET/in`
 - Processed files are written into `s3://YOURBUCKET/processed`
+- The first line in the processed files will be a comment: `#processed`.
 
 ## Create a bucket
 
 - In the AWS console, go to the `S3` service.
-- Click `Create bucket`
-- Select `General Purpose`
+- Click `Create bucket`.
+- Select `General Purpose`.
 - Name your bucket. Remember, bucket names must be globally unique.
 - Leave `ACLs disabled (recommended)` selected as default.
 - Leave `Block all public access` selected as default.
@@ -48,7 +49,7 @@ This step is applicable only if you have IAM permissions on the account and crea
 (Selected `Create a new role with basic Lambda permissions`)
 
 The default Lambda permission created in the previous step allows the Lambda function to write to CloudWatch Logs.
-But we also want the function to read from and write to the bucket we just created. To achivee that,
+But we also want the function to read from and write to the bucket we just created. To achieve that,
 we need to update the Lambda function execution role.
 
 - On the `Configuration` tab of the lambda function, select `Permissions` on the left.
@@ -68,12 +69,12 @@ Enter code from [lambda_function.py](./lambda-s3-file-processing/lambda_function
 
 ## Configure Trigger for the lambda function
 
-- On the `Function overview` panel, click `Add trigger`
-- Select `EventBridge (CloudWatch Events)`
+- On the `Function overview` panel, click `Add trigger`.
+- Select `EventBridge (CloudWatch Events)`.
 - Select `Create new rule`, enter `S3UniRule` for `Rule name`.
-- Select `Event Pattern`
-- Select `Simple Storage Service (S3)`
-- Select `All Events`
+- Select `Event Pattern`.
+- Select `Simple Storage Service (S3)`.
+- Select `All Events`.
 - Click add.
 - On the Lambda page in the `Configuration` tab, select `Triggers` on the left, then click on the `S3UniRule` link.
 - On the `Event pattern` tab, click `Edit`, select `Edit pattern`, select `Custom pattern`.
