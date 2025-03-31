@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: UNI IAM roles for exercises
+
+Resources:
+  WebserverIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /UniRoles/
+      RoleName: UniWebserverIAMRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: DynamoAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: DynamoAllowAll
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource: '*'
+
+  WebServerInstanceProfile:
+      Type: AWS::IAM::InstanceProfile
+      Properties:
+        Path: /UniProfiles/
+        InstanceProfileName: UniWebserverInstanceProfile
+        Roles:
+          - Ref: WebserverIAMRole
