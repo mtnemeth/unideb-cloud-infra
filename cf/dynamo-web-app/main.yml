@@ -72,38 +72,39 @@ Resources:
       VpcId:
         Ref: PVpcId
 
-  WebserverIAMRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: WebserverIAMRole
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-      Policies:
-        - PolicyName: DynamoAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Sid: DynamoTestAppAllowAll
-                Effect: Allow
-                Action:
-                  - dynamodb:*
-                Resource:
-                  - !GetAtt DynamoTable.Arn
-
-  WebServerInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-        - Ref: WebserverIAMRole
+  # These resources will be created form a stacksetinstead, see admin/UniIAMWebserverRoleStackSet.yml
+  # WebserverIAMRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     RoleName: WebserverIAMRole
+  #     AssumeRolePolicyDocument:
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - ec2.amazonaws.com
+  #           Action:
+  #             - sts:AssumeRole
+  #     ManagedPolicyArns:
+  #       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+  #     Policies:
+  #       - PolicyName: DynamoAccess
+  #         PolicyDocument:
+  #           Version: '2012-10-17'
+  #           Statement:
+  #             - Sid: DynamoTestAppAllowAll
+  #               Effect: Allow
+  #               Action:
+  #                 - dynamodb:*
+  #               Resource:
+  #                 - !GetAtt DynamoTable.Arn
+  #
+  # WebServerInstanceProfile:
+  #   Type: AWS::IAM::InstanceProfile
+  #   Properties:
+  #     Path: /
+  #     Roles:
+  #       - Ref: WebserverIAMRole
 
   WebserverEc2:
     Type: AWS::EC2::Instance
@@ -118,8 +119,9 @@ Resources:
       ###
       # KeyName:
       #   Ref: KeyPair
-      IamInstanceProfile:
-        Ref: WebServerInstanceProfile
+      IamInstanceProfile: UniWebserverInstanceProfile
+        # resource created in a stackset instead and referenced from there
+        # Ref: WebServerInstanceProfile
       SubnetId:
         Ref: PSubnetId
       UserData:
