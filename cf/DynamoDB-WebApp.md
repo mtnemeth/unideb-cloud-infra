@@ -38,5 +38,5 @@ Go into the AWS console, find the public IP of the webserver and paste it into a
 In the `cf` folder, execute the following:
 
 ```Bash
-./deploy-stack.sh dynamo-web-app
+./undeploy-stack.sh dynamo-web-app
 ```
